@@ -30,6 +30,7 @@ ENDMACRO (CHECK_STRUCT_MEMBER)
 ## linux
 IF(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   SET(SIGAR_SRC os/linux/linux_sigar.c)
+  SET(SIGAR_HDR os/linux/sigar_os.h)
 
   INCLUDE_DIRECTORIES(os/linux/)
 ENDIF(CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -37,6 +38,11 @@ ENDIF(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 ## macosx, freebsd
 IF(CMAKE_SYSTEM_NAME MATCHES "(Darwin|FreeBSD)")
   SET(SIGAR_SRC os/darwin/darwin_sigar.c)
+  SET(SIGAR_HDR
+	os/darwin/if_types.h
+	os/darwin/sigar_os.h
+	os/darwin/tcp_fsm.h
+  )
 
   INCLUDE_DIRECTORIES(os/darwin/)
   IF(CMAKE_SYSTEM_NAME MATCHES "(Darwin)")
@@ -56,6 +62,10 @@ IF (CMAKE_SYSTEM_NAME MATCHES "(Solaris|SunOS)" )
 	os/solaris/kstats.c
 	os/solaris/procfs.c
   )
+SET(SIGAR_HDR
+	os/solaris/get_mib2.h
+	os/solaris/sigar_os.h
+  )
 
   INCLUDE_DIRECTORIES(os/solaris/)
   ADD_DEFINITIONS(-DSOLARIS)
@@ -63,9 +73,10 @@ IF (CMAKE_SYSTEM_NAME MATCHES "(Solaris|SunOS)" )
   SET(SIGAR_LINK_FLAGS "-lkstat -ldl -lnsl -lsocket -lresolv -ldlpi")
 ENDIF(CMAKE_SYSTEM_NAME MATCHES "(Solaris|SunOS)" )
 
-## solaris
+## hpux
 IF (CMAKE_SYSTEM_NAME MATCHES "(hpux)" )
   SET(SIGAR_SRC os/hpux/hpux_sigar.c)
+  SET(SIGAR_HDR os/hpux/sigar_os.h)
   INCLUDE_DIRECTORIES(os/hpux/)
   ADD_DEFINITIONS(-DSIGAR_HPUX)
   SET(SIGAR_LINK_FLAGS -lnm)
@@ -74,6 +85,7 @@ ENDIF(CMAKE_SYSTEM_NAME MATCHES "(hpux)" )
 ## aix
 IF (CMAKE_SYSTEM_NAME MATCHES "(AIX)" )
   SET(SIGAR_SRC os/aix/aix_sigar.c)
+  SET(SIGAR_HDR os/aix/sigar_os.h)
 
   INCLUDE_DIRECTORIES(os/aix/)
   SET(SIGAR_LINK_FLAGS -lodm -lcfg)
@@ -82,6 +94,10 @@ ENDIF(CMAKE_SYSTEM_NAME MATCHES "(AIX)" )
 IF(WIN32)
   ADD_DEFINITIONS(-DSIGAR_SHARED)
   SET(SIGAR_SRC os/win32/peb.c os/win32/win32_sigar.c os/win32/wmi.cpp)
+  SET(SIGAR_HDR
+	sigar_os.h
+	sigar_pdh.h
+  )
   INCLUDE_DIRECTORIES(os/win32)
   CHECK_STRUCT_MEMBER(MIB_IPADDRROW wType "windows.h;iphlpapi.h" wType_in_MIB_IPADDRROW)
   add_definitions(-DHAVE_MIB_IPADDRROW_WTYPE=${wType_in_MIB_IPADDRROW})
@@ -99,7 +115,18 @@ SET(SIGAR_SRC ${SIGAR_SRC}
   sigar_util.c
 )
 
-ADD_LIBRARY(sigar SHARED ${SIGAR_SRC})
+SET(SIGAR_HDR ${SIGAR_HDR}
+  ../include/sigar_fileinfo.h
+  ../include/sigar_format.h
+  ../include/sigar.h
+  ../include/sigar_log.h
+  ../include/sigar_private.h
+  ../include/sigar_ptql.h
+  ../include/sigar_util.h
+  ../include/machine/endian.h
+)
+
+ADD_LIBRARY(sigar SHARED ${SIGAR_SRC} ${SIGAR_HDR})
 IF(WIN32)
 	TARGET_LINK_LIBRARIES(sigar ws2_32 netapi32 version)
 ENDIF(WIN32)
