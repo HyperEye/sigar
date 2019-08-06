@@ -90,6 +90,7 @@ ENDIF(WIN32)
 SET(SIGAR_SRC ${SIGAR_SRC}
   sigar.c
   sigar_cache.c
+  sigar_elf.c
   sigar_fileinfo.c
   sigar_format.c
   sigar_ptql.c
