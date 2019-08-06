@@ -26,6 +26,24 @@ int main()
 
 ENDMACRO (CHECK_STRUCT_MEMBER)
 
+MACRO (CHECK_SYMBOL_EXISTS _SYMBOL _HEADER _LIB _RESULT)
+   SET(_INCLUDE_FILES)
+   FOREACH (it ${_HEADER})
+      SET(_INCLUDE_FILES "${_INCLUDE_FILES}#include <${it}>\n")
+   ENDFOREACH (it)
+
+   SET(_CHECK_SYMBOL_EXISTS_SOURCE_CODE "
+${_INCLUDE_FILES}
+int main()
+{
+void* tmp = (void*)&${_SYMBOL};
+   return 0;
+}
+")
+   SET(CMAKE_REQUIRED_LIBRARIES ${_LIB})
+   CHECK_C_SOURCE_COMPILES("${_CHECK_SYMBOL_EXISTS_SOURCE_CODE}" ${_RESULT})
+
+ENDMACRO (CHECK_SYMBOL_EXISTS)
 
 ## linux
 IF(CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -100,7 +118,13 @@ IF(WIN32)
   )
   INCLUDE_DIRECTORIES(os/win32)
   CHECK_STRUCT_MEMBER(MIB_IPADDRROW wType "windows.h;iphlpapi.h" wType_in_MIB_IPADDRROW)
-  add_definitions(-DHAVE_MIB_IPADDRROW_WTYPE=${wType_in_MIB_IPADDRROW})
+  if(${wType_in_MIB_IPADDRROW})
+      add_definitions(-DHAVE_MIB_IPADDRROW_WTYPE)
+  endif()
+  CHECK_SYMBOL_EXISTS(CLSID_WbemLocator "windows.h;ole2.h;wbemcli.h" "wbemuuid"  HAS_WBEMLOCATOR)
+  if(${HAS_WBEMLOCATOR})
+    add_definitions(-DHAVE_WBEMLOCATOR)
+  endif()
 ENDIF(WIN32)
 
 SET(SIGAR_SRC ${SIGAR_SRC}
