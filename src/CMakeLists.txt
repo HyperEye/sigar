@@ -95,8 +95,8 @@ IF(WIN32)
   ADD_DEFINITIONS(-DSIGAR_SHARED)
   SET(SIGAR_SRC os/win32/peb.c os/win32/win32_sigar.c os/win32/wmi.cpp)
   SET(SIGAR_HDR
-	sigar_os.h
-	sigar_pdh.h
+	os/win32/sigar_os.h
+	os/win32/sigar_pdh.h
   )
   INCLUDE_DIRECTORIES(os/win32)
   CHECK_STRUCT_MEMBER(MIB_IPADDRROW wType "windows.h;iphlpapi.h" wType_in_MIB_IPADDRROW)
