@@ -114,6 +114,7 @@ TEST(test_sigar_cpu_info_get) {
 	for (i = 0; i < cpuinfo.number; i++) {
 		sigar_cpu_info_t info = cpuinfo.data[i];
 
+		assert(info.vendor_id);
 		assert(info.vendor);
 		assert(info.model);
 #if !(defined(SIGAR_TEST_OS_DARWIN))

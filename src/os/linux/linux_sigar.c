@@ -1687,6 +1687,7 @@ static int get_cpu_info(sigar_t *sigar, sigar_cpu_info_t *info,
             /* "vendor_id" or "vendor" */
             if (strnEQ(ptr, "vendor", 6)) {
                 cpu_info_strcpy(ptr, info->vendor, sizeof(info->vendor));
+                SIGAR_SSTRCPY(info->vendor_id, info->vendor);
                 if (strEQ(info->vendor, "GenuineIntel")) {
                     SIGAR_SSTRCPY(info->vendor, "Intel");
                 }

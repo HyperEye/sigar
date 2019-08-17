@@ -197,6 +197,7 @@ SIGAR_DECLARE(int) sigar_cpu_list_destroy(sigar_t *sigar,
                                           sigar_cpu_list_t *cpulist);
 
 typedef struct {
+    char vendor_id[128];
     char vendor[128];
     char model[128];
     int mhz;

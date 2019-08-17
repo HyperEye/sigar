@@ -2210,15 +2210,19 @@ static int sigar_cpu_info_get(sigar_t *sigar, sigar_cpu_info_t *info)
 
     size = sizeof(info->vendor);
     if (RegQueryValueEx(cpu, "VendorIdentifier", NULL, NULL,
-                        (LPVOID)&info->vendor, &size) ||
-        strEQ(info->vendor, "GenuineIntel"))
+                        (LPVOID)&info->vendor_id, &size) ||
+        strEQ(info->vendor_id, "GenuineIntel"))
     {
         SIGAR_SSTRCPY(info->vendor, "Intel");
     }
     else {
-        if (strEQ(info->vendor, "AuthenticAMD")) {
+        if (strEQ(info->vendor_id, "AuthenticAMD")) {
             SIGAR_SSTRCPY(info->vendor, "AMD");
         }
+    }
+    else
+    {
+        SIGAR_SSTRCPY(info->vendor, info->vendor_id);
     }
 
     size = sizeof(info->model);

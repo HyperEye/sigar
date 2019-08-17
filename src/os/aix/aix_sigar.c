@@ -1520,6 +1520,7 @@ int sigar_cpu_info_list_get(sigar_t *sigar,
         else {
             SIGAR_SSTRCPY(info->vendor, "Unknown");
         }
+        SIGAR_SSTRCPY(info->vendor_id, info->vendor);
 
         snprintf(info->model, sizeof(info->model),
                  "%s %s", arch, model);
