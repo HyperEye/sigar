@@ -1807,6 +1807,7 @@ int sigar_cpu_info_list_get(sigar_t *sigar,
         info = &cpu_infos->data[cpu_infos->number];
         get_cpuinfo_max_freq(info, cpu_infos->number);
         get_cpuinfo_min_freq(info, cpu_infos->number);
+        sigar_get_processor_id(info);
 
         info->total_cores = sigar->ncpu;
         info->cores_per_socket = sigar->lcpu;

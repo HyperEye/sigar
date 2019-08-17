@@ -117,6 +117,7 @@ TEST(test_sigar_cpu_info_get) {
 		assert(info.vendor_id);
 		assert(info.vendor);
 		assert(info.model);
+		assert(info.processor_id);
 #if !(defined(SIGAR_TEST_OS_DARWIN))
 		/* freebsd doesn't always expose it */
 		assert(IS_IMPL_INT(info.mhz));

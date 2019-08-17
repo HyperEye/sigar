@@ -200,6 +200,7 @@ typedef struct {
     char vendor_id[128];
     char vendor[128];
     char model[128];
+    char processor_id[128];
     int mhz;
     int mhz_max;
     int mhz_min;

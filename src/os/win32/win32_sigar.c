@@ -2254,6 +2254,7 @@ static int sigar_cpu_info_get(sigar_t *sigar, sigar_cpu_info_t *info)
     info->total_cores = sigar->ncpu;
     info->cores_per_socket = sigar->lcpu;
     info->total_sockets = sigar_cpu_socket_count(sigar);
+    sigar_get_processor_id(info);
 
     return SIGAR_OK;
 }

@@ -153,6 +153,8 @@ typedef struct {
 sigar_iodev_t *sigar_iodev_get(sigar_t *sigar,
                                const char *dirname);
 
+int sigar_get_processor_id(sigar_cpu_info_t *info);
+
 int sigar_cpu_core_count(sigar_t *sigar);
 
 /* e.g. VM guest may have 1 virtual ncpu on multicore hosts */

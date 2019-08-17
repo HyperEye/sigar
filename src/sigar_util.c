@@ -635,6 +635,22 @@ static void sigar_cpuid(sigar_uint32_t request,
 #define INTEL_ID 0x756e6547
 #define AMD_ID   0x68747541
 
+int sigar_get_processor_id(sigar_cpu_info_t *info)
+{
+#if defined(SIGAR_HAS_CPUID)
+    sigar_cpuid_t id;
+
+    sigar_cpuid(0, &id);
+
+    if ((id.ebx == INTEL_ID) || (id.ebx == AMD_ID)) {
+        sigar_cpuid(1, &id);
+        snprintf(info->processor_id, 16, "%08X%08X", id.edx, id.eax);
+        return SIGAR_OK;
+    }
+#endif
+    return SIGAR_FIELD_NOTIMPL;
+}
+
 int sigar_cpu_core_count(sigar_t *sigar)
 {
 #if defined(SIGAR_HAS_CPUID)
