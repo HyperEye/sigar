@@ -46,6 +46,7 @@ static char *gPROC_STAT;
 static char *gPROC_UPTIME;
 static char *gPROC_LOADAVG;
 static char *gSYS_BLOCK;
+static char *gSYS_DEVDMI;
 static char *gPROC_PARTITIONS;
 static char *gPROC_DISKSTATS;
 static char *gMOUNTED;
@@ -63,6 +64,7 @@ static void set_proc_locations()
     sigar_proc_path(&gPROC_DISKSTATS,  PROC_FS_ROOT, "diskstats");
     sigar_proc_path(&gPROC_PARTITIONS, PROC_FS_ROOT, "partitions");
     sigar_proc_path(&gSYS_BLOCK,       NULL,         "/sys/block");
+    sigar_proc_path(&gSYS_DEVDMI,      NULL,         "/sys/devices/virtual/dmi/id/");
     sigar_proc_path(&gMOUNTED,         NULL,         MOUNTED);
 }
 
@@ -456,6 +458,55 @@ int sigar_cpu_get(sigar_t *sigar, sigar_cpu_t *cpu)
 
     SIGAR_ZERO(cpu);
     get_cpu_metrics(sigar, cpu, buffer);
+
+    return SIGAR_OK;
+}
+
+int mb_proc_file2str(char *mb_stat, char **mb_stat_fpath, char *buffer, int buflen)
+{
+    int status;
+    size_t i;
+
+    sigar_proc_path(mb_stat_fpath, gSYS_DEVDMI, mb_stat);
+    status = sigar_file2str(*mb_stat_fpath, buffer, buflen-1);
+
+    /* Remove any newline */
+    for(i = 0; i < strlen(buffer); ++i)
+    {
+        if(buffer[i] == '\n' || buffer[i] == '\r')
+        {
+            buffer[i] = '\0';
+        }
+    }
+
+    return status;
+}
+
+int sigar_mb_get(sigar_t *sigar, sigar_mb_info_t *mb)
+{
+    int status;
+    static char *board_name;
+    static char *board_serial;
+    static char *board_vendor;
+    static char *board_version;
+    static char *bios_date;
+    static char *bios_vendor;
+    static char *bios_version;
+
+    status = mb_proc_file2str("board_name", &board_name, mb->name, sizeof(mb->name));
+
+    /* Root or SUID root required */
+    status = mb_proc_file2str("board_serial", &board_serial, mb->serial, sizeof(mb->serial));
+
+    status = mb_proc_file2str("board_vendor", &board_vendor, mb->vendor, sizeof(mb->vendor));
+
+    status = mb_proc_file2str("board_version", &board_version, mb->version, sizeof(mb->version));
+
+    status = mb_proc_file2str("bios_date", &bios_date, mb->bios_date, sizeof(mb->bios_date));
+
+    status = mb_proc_file2str("bios_vendor", &bios_vendor, mb->bios_vendor, sizeof(mb->bios_vendor));
+
+    status = mb_proc_file2str("bios_version", &bios_version, mb->bios_version, sizeof(mb->bios_version));
 
     return SIGAR_OK;
 }

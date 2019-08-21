@@ -131,6 +131,11 @@ int sigar_sys_info_get_uuid(sigar_t *sigar, char uuid[SIGAR_SYS_INFO_LEN])
     return SIGAR_ENOTIMPL;
 }
 
+int sigar_mb_get(sigar_t *sigar, sigar_mb_info_t *mb)
+{
+    return SIGAR_ENOTIMPL;
+}
+
 int sigar_os_open(sigar_t **sigar)
 {
     int mib[2];

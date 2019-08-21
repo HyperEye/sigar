@@ -225,6 +225,18 @@ sigar_cpu_info_list_destroy(sigar_t *sigar,
                             sigar_cpu_info_list_t *cpu_infos);
 
 typedef struct {
+    char vendor[128];
+    char name[128];
+    char serial[128];
+    char version[128];
+    char bios_vendor[128];
+    char bios_version[128];
+    char bios_date[128];
+} sigar_mb_info_t;
+
+SIGAR_DECLARE(int) sigar_mb_get(sigar_t *sigar, sigar_mb_info_t *mb);
+
+typedef struct {
     double uptime;
 } sigar_uptime_t;
 

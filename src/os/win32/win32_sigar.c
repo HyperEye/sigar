@@ -1415,6 +1415,11 @@ int sigar_sys_info_get_uuid(sigar_t *sigar, char uuid[SIGAR_SYS_INFO_LEN])
     return SIGAR_ENOTIMPL;
 }
 
+int sigar_mb_get(sigar_t *sigar, sigar_mb_info_t *mb)
+{
+    return SIGAR_ENOTIMPL;
+}
+
 SIGAR_DECLARE(int) sigar_proc_time_get(sigar_t *sigar, sigar_pid_t pid,
                                        sigar_proc_time_t *proctime)
 {
