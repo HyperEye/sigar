@@ -644,7 +644,7 @@ int sigar_get_processor_id(sigar_cpu_info_t *info)
 
     if ((id.ebx == INTEL_ID) || (id.ebx == AMD_ID)) {
         sigar_cpuid(1, &id);
-        snprintf(info->processor_id, 16, "%08X%08X", id.edx, id.eax);
+        snprintf(info->processor_id, 17, "%08X%08X", id.edx, id.eax);
         return SIGAR_OK;
     }
 #endif
